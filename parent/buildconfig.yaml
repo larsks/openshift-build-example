@@ -1,0 +1,26 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: parent
+spec:
+  failedBuildsHistoryLimit: 3
+  successfulBuildsHistoryLimit: 3
+  output:
+    to:
+      kind: ImageStreamTag
+      name: openshift-build-example:parent
+  runPolicy: Serial
+  source:
+    git:
+      ref: main
+      uri: https://github.com/larsks/openshift-build-example
+    type: Git
+    contextDir: parent/image
+  strategy:
+    type: Docker
+  triggers:
+    - type: ConfigChange
+    - type: GitHub
+      github:
+        secretReference:
+          name: parent-webhook

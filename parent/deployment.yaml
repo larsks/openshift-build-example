@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: parent
+  annotations:
+    image.openshift.io/triggers: |-
+      [
+        {
+          "from": {
+            "kind": "ImageStreamTag",
+            "name": "openshift-build-example:parent"
+          },
+          "fieldPath": "spec.template.spec.containers[0].image"
+        }
+      ]
+spec:
+  template:
+    spec:
+      containers:
+        - name: parent
+          image: openshift-build-example:parent
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
